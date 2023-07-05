@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal, computed, isDevMode, signal } from '@angular/core';
+import { Injectable, Signal, inject, isDevMode, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
@@ -17,19 +17,13 @@ type AuthUser = {
   providedIn: 'root'
 })
 export class AuthService {
-  #auth_api = AUTH_URL;
-  #user_api = USER_URL;
+  #auth_url = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL;
+  #user_url = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL;
+
+  #http       = inject(HttpClient)
+  #storageSvc = inject(StorageService)
+
   #access_token = signal('')
-
-  constructor(
-    private http: HttpClient,
-    private storageSvc: StorageService) {
-    if (isDevMode()) {
-      this.#auth_api = "http://localhost:8003/auth/";
-      this.#user_api = "http://localhost:8002/api/v1/user/";
-    }
-  }
-
   get access_token(): Signal<string> {
     const HOURS = 60 * 60 * 24;
     const access_token = window.localStorage.getItem("access_token") || '';
@@ -39,7 +33,7 @@ export class AuthService {
       const now = new Date().getTime() / 1000;
 
       if (payload.exp - now < HOURS) {
-        this.http.get<AuthUser>(this.#auth_api, { withCredentials: true })
+        this.#http.get<AuthUser>(this.#auth_url, { withCredentials: true })
           .subscribe((auth) => {
             window.localStorage.setItem('access_token', auth.access_token)
 
@@ -52,25 +46,29 @@ export class AuthService {
   }
 
   login(token: string): void {
-    this.http.post<AuthUser>(this.#auth_api + 'login', token, { withCredentials: true })
+    this.#http.post<AuthUser>(this.#auth_url + 'login', token, { withCredentials: true })
       .subscribe((auth) => {
         window.localStorage.setItem('access_token', auth.access_token)
 
         this.me(auth.access_token).subscribe(user => {
-          this.storageSvc.set('user', user)
+          this.#storageSvc.set('user', user)
 
           // should be here to save user first
           // otherwise, papers will not be loaded
           this.#access_token.set(auth.access_token)
+
+          // TODO: remove this
+          // but how to do it?
+          // this.router.navigate(['home']);
         })
       });
   }
 
   logout(): void {
-    this.http.get(this.#auth_api + 'logout', { withCredentials: true })
+    this.#http.get(this.#auth_url + 'logout', { withCredentials: true })
       .subscribe(() => {
-        this.storageSvc.remove('access_token')
-        this.storageSvc.remove('user')
+        this.#storageSvc.remove('access_token')
+        this.#storageSvc.remove('user')
         this.#access_token.set('')
 
         // TODO: remove papers and others
@@ -83,6 +81,6 @@ export class AuthService {
       Authorization: 'Bearer ' + access_token,
       ContentType: 'application/json'}
 
-    return this.http.get<any>(this.#user_api + 'me/', { headers })
+    return this.#http.get<any>(this.#user_url + 'me/', { headers })
   }
 }
