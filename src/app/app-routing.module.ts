@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AuthGuard } from './providers/guards/auth';
+import { authGuard } from './providers/guards/auth';
 
 import { HomeComponent }  from './modules/main/components/home/home.component';
 import { LoginComponent } from './modules/main/components/login/login.component';
@@ -9,10 +9,10 @@ import { AboutComponent } from './modules/main/components/about/about.component'
 import { ModulesComponent } from './modules/modules/modules.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'modules', component: ModulesComponent, canActivate: [AuthGuard] },
+  { path: 'modules', component: ModulesComponent, canActivate: [authGuard] },
 
   // { path: 'main',
   //   loadChildren: () => import('./modules/main/main.module').then(m => m.MainModule) },
