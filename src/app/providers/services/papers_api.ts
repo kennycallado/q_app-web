@@ -12,27 +12,22 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class PaperService {
-  #paper_url  = isDevMode() ? "http://localhost:8032/api/v1/paper/" : PAPER_URL ;
-
   #http       = inject(HttpClient)
   #authSvc    = inject(AuthService)
   #storageSvc = inject(StorageService)
 
+  #paper_url  = isDevMode() ? "http://localhost:8032/api/v1/paper/" : PAPER_URL ;
   #access_token: Signal<string> = this.#authSvc.access_token;
 
   #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [])
-  papers = computed(() => this.#papers())
+  papers  = computed(() => this.#papers())
 
   #initialized = false
-  init = effect(() => {
-    if (!this.#initialized) this.initPapers() })
-  // #init   = effect(() => { if (this.#access_token() !== '')  this.initPapers() })
-  // init   = effect(() => { this.initPapers() })
-  // update = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
-  // save   = effect(() => { })
+  init   = effect(() => { if (!this.#initialized) this.initPapers() })
+  update = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
 
-  constructor() {
-    console.log('PaperService')
+  refresh() {
+    this.initPapers()
   }
 
   private initPapers() {
@@ -42,8 +37,10 @@ export class PaperService {
         if (this.#papers().find((p) => p.id === paper.id)) return ;
 
         this.getApiPaper(paper.id).subscribe((paper) => {
-          this.#papers.update((papers) => [...papers, paper]) })
+          this.#papers.set([...this.#papers(), paper]) })
+        // this.#papers.update((papers) => [...papers, paper]) })
       }))
+
     this.#initialized = true
   }
 
