@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand p-0" href="#">
+      <img style="width: 120px;" class="img-fluid" src="assets/images/brands/brand-valencia.jpg" />
+    </a>
+
+    <button class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+      <ul class="navbar-nav pt-2 ms-auto">
+        <li class="nav-item ms-auto me-5">
+          <a class="nav-link" (click)="goToHome()">Home</a>
+        </li>
+        <li class="nav-item ms-auto me-5">
+          <a class="nav-link" (click)="goToModules()">Modules</a>
+        </li>
+      <!--   <li class="nav-items mx-auto me-5"> -->
+      <!--     <a class="nav-link" [routerLink]="['tests']">Tests</a> -->
+      <!--   </li> -->
+        <li class="nav-items mx-auto me-5">
+          <a class="nav-link" (click)="goToAbout()">About</a>
+        </li>
+        <li *ngIf="is_authenticated" class="nav-item ms-auto me-5">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
