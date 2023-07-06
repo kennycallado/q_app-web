@@ -4,11 +4,9 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Signal, ViewEncapsulation, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
-import { DEFAULT_PICTURE_URL } from 'src/app/providers/constants';
 import { PaperService } from 'src/app/providers/services/papers_api';
 import { PubPaper, PubPaperPush } from 'src/app/providers/models/paper';
 import { MediaComponent } from '../media/media.component';
-import { InputComponent } from '../input/input.component';
 
 @Component({
   standalone: true,
