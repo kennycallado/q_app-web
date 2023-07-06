@@ -23,7 +23,7 @@ export class NavigationComponent {
   }
 
   goToModules() {
-    this.#router.navigate(['/modules']);
+    this.#router.navigate(['/module']);
   }
 
   logout(): void {
