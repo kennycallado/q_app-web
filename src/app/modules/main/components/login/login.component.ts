@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, effect, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/providers/services/auth';
 
 @Component({
@@ -10,13 +10,16 @@ import { AuthService } from 'src/app/providers/services/auth';
 export class LoginComponent {
   #authSvc = inject(AuthService)
   #router  = inject(Router)
+  #route   = inject(ActivatedRoute)
+
+  update = effect(() => {
+    if (this.#authSvc.access_token() !== '') {
+      const returnUrl = this.#route.snapshot.queryParams['returnUrl'] || '/home';
+      this.#router.navigateByUrl(returnUrl);
+    }
+  })
 
   submit(user_token: HTMLInputElement) {
     this.#authSvc.login(user_token.value)
-
-    // TODO: arreglar...
-    setTimeout(() => {
-      this.#router.navigate(['home']);
-    }, 1000)
   }
 }
