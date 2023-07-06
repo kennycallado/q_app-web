@@ -1,12 +1,13 @@
 import { register } from 'swiper/element/bundle'
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Signal, ViewEncapsulation, inject, signal } from '@angular/core';
+import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Signal, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { PaperService } from 'src/app/providers/services/papers_api';
 import { PubPaper, PubPaperPush } from 'src/app/providers/models/paper';
 import { MediaComponent } from '../media/media.component';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   standalone: true,
@@ -15,22 +16,53 @@ import { MediaComponent } from '../media/media.component';
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.sass'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  // imports: [CommonModule, InputComponent, MediaComponent],
-  imports: [CommonModule, MediaComponent]
+  imports: [CommonModule, MediaComponent, InputComponent]
 })
 export class SliderComponent implements OnInit, AfterViewInit{
   #router   = inject(Router)
   #route    = inject(ActivatedRoute)
   #paperSvc = inject(PaperService)
 
+  paperPush: PubPaperPush;
   paper: Signal<PubPaper>
-  answer: string = ''
-
-  // timeStamp: number = Date.now()
-  // default_picture = DEFAULT_PICTURE_URL
+  answer: string
 
   allowSlideNext: boolean = true;
   reachedEnd: boolean = false;
+
+  changeAnswer(answer: string) {
+    switch (answer) {
+      case '0':
+        this.answer = 'N/C';
+        break;
+      case '1':
+        this.answer = 'Nada';
+        break;
+      case '2':
+        this.answer = 'Poco';
+        break;
+      case '3':
+        this.answer = 'Medio';
+        break;
+      case '4':
+        this.answer = 'Bastante';
+        break;
+      case '5':
+        this.answer = 'Mucho';
+        break;
+      case '6':
+        this.answer = 'Totalmente';
+        break;
+    }
+
+    if (answer === '0') {
+      // this.slide!.answer = '';
+      return ;
+    }
+
+    // this.submit(); // side effect ??
+    return ;
+  }
 
   reachEnd() {
     this.reachedEnd = true;
@@ -43,23 +75,20 @@ export class SliderComponent implements OnInit, AfterViewInit{
 
   submitAndExit() {
     /* some staffs */
+    this.answer = ''
     this.#router.navigate(['/module']);
   }
 
-  next(event: string) {
+  next() {
     // clean the answer
     this.answer = ''
 
   }
 
-  prev(event: string) {
+  prev() {
     // clean the answer
     this.answer = ''
 
-  }
-
-  showResource() {
-    console.log(this.paper())
   }
 
   ngOnInit(): void {
@@ -72,5 +101,7 @@ export class SliderComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit(): void {
     register()
+    // quizá para agregar estilos
+    // const swiperEl = document.querySelector('swiper-container');
   }
 }

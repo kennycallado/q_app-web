@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-input',
   standalone: true,
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss']
+  styleUrls: ['./input.component.sass']
 })
 export class InputComponent {
 
@@ -14,9 +14,7 @@ export class InputComponent {
   @Output() changeAnswer = new EventEmitter<string>();
 
   change(target: EventTarget | null) {
-    if (!target) {
-      return ;
-    }
+    if (!target) return ; // not sure if this is necessary
 
     this.answer = (target as HTMLInputElement).value;
     this.changeAnswer.emit(this.answer);

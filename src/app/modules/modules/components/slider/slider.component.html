@@ -1,8 +1,4 @@
-<button (click)="showResource()" >Show Resoruce</button>
-
-<h1 class="text-center text-light">{{ paper().resource.title }}</h1>
-
-<swiper-container class="overflow-visible"
+<swiper-container
   auto-height="false"
   loop="false"
   [attr.allow-slide-next]="allowSlideNext"
@@ -11,8 +7,8 @@
   navigation="true"
   navigation-next-el=".next-slide"
   navigation-prev-el=".prev-slide"
-  (slidenexttransitionstart)="next('transition')"
-  (slideprevtransitionstart)="prev('transition')"
+  (slidenexttransitionstart)="next()"
+  (slideprevtransitionstart)="prev()"
   (reachend)="reachEnd()"
   #swiper>
 
@@ -35,19 +31,26 @@
 
               <div class="col mx-md-4 d-md-flex flex-md-column justify-content-center">
 
-                <h5 class="card-title mb-3 fs-3 text-primary text-center"><u>{{ slide.title }}</u></h5>
+                <h5 class="card-title mb-3 fs-3 text-primary text-center"><u>{{ paper().resource.title }}</u></h5>
 
                 <p class="card-text lead"
                   style="text-align: justify;"
                   *ngIf="slide.slide_type === 'content'">{{ slide.content }}</p>
 
-                <p *ngIf="slide.slide_type === 'input'"
-                  class="lead">hola soy una pregunta</p>
+                <!-- <p *ngIf="slide.slide_type === 'input'" -->
+                <!--   class="lead">hola soy una pregunta</p> -->
 
-                <!-- <app-input class="w-100" -->
-                <!--   type="{{ slide.slide_type }}" -->
-                <!--   *ngIf="slide.slide_type !== 'content'" -->
-                <!--   (changeAnswer)="changeAnswer($event)"></app-input> -->
+                <p>
+                  <span class="lead"
+                    *ngIf="slide.slide_type !== 'content'">{{ slide.question.question }}</span>
+
+                  <span class="text-primary"
+                    *ngIf="slide.slide_type !== 'content'"><strong> {{ answer }}</strong></span>
+                </p>
+                <app-input class="w-100"
+                  type="{{ slide.question.question_type }}"
+                  *ngIf="slide.slide_type !== 'content'"
+                  (changeAnswer)="changeAnswer($event)"></app-input>
 
                 <!-- <p class="card-text" style="text-align: justify;" *ngFor="let content of slide!.content; let last = last" > -->
                 <!--   <span *ngIf="content.slides.slide_type">hola</span> -->
