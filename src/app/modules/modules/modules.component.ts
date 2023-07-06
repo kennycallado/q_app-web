@@ -12,10 +12,6 @@ export class ModulesComponent {
 
   papers: Signal<PubPaper[]> = this.#paperSvc.papers;
 
-  resourceType(paper: PubPaper) {
-    return Object.keys(paper.resource.content)[0]
-  }
-
   showPapers() {
     console.log(this.papers())
   }

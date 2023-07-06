@@ -15,7 +15,7 @@
       <a class="nav-link" [routerLink]="['/module/slider', paper.id]">
         <span class="lead ms-4"> {{ paper.resource.title }}</span>
       </a>
-      <span class="lead ms-auto me-2 text-success" style="--bs-text-opacity: .7;"> {{ resourceType(paper) }}</span>
+      <span class="lead ms-auto me-2 text-success" style="--bs-text-opacity: .7;"> {{ paper.resource.resource_type }}</span>
     </li>
   </ul>
 </div>
