@@ -1,3 +1,4 @@
+import { Media } from "./media";
 import { PubQuestion } from "./question";
 
 export enum PubSlideType {
@@ -10,6 +11,7 @@ export class PubSlide {
   slide_type: PubSlideType;
   title: string;
   description: string;
+  media?: Media;
   content?: string;
   question?: PubQuestion;
 }

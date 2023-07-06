@@ -10,5 +10,6 @@ export class PubResource {
   id: number;
   title: string;
   description: string;
+  resource_type: string;
   content: PubResourceType;
 }
