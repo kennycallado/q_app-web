@@ -11,12 +11,4 @@ export class ModulesComponent {
   #paperSvc = inject(PaperService)
 
   papers: Signal<PubPaper[]> = this.#paperSvc.papers;
-
-  showPapers() {
-    console.log(this.papers())
-  }
-
-  refresh() {
-    this.#paperSvc.refresh()
-  }
 }
