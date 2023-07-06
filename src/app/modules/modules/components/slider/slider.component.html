@@ -1,4 +1,109 @@
-<swiper-container class="overflow-visible">
-  <swiper-slide>A</swiper-slide>
-  <swiper-slide>B</swiper-slide>
+<button (click)="showResource()" >Show Resoruce</button>
+
+<h1 class="text-center text-light">{{ paper().resource.title }}</h1>
+
+<swiper-container class="overflow-visible"
+  auto-height="false"
+  loop="false"
+  [attr.allow-slide-next]="allowSlideNext"
+  slides-per-view="1"
+  space-between="200"
+  navigation="true"
+  navigation-next-el=".next-slide"
+  navigation-prev-el=".prev-slide"
+  (slidenexttransitionstart)="next('transition')"
+  (slideprevtransitionstart)="prev('transition')"
+  (reachend)="reachEnd()"
+  #swiper>
+
+  <swiper-slide *ngFor="let slide of paper().resource.content[paper().resource.resource_type]">
+    <div class="d-flex align-items-center position-relative mt-4 mt-md-5">
+      <div class="card mx-auto" style="margin-top: 100px; width: 100%;">
+
+        <div class="d-md-none media-up" [class.media-up-gradient]="slide.media && slide.media.type !== 'video' || !slide.media">
+          <app-media [media]="slide.media"></app-media>
+        </div>
+
+          <div class="card-body">
+            <div class="row">
+
+              <div class="d-none d-md-block col-3">
+                <div class="media-left" [class.media-left-gradient]="slide.media && slide.media.type !== 'video' || !slide.media">
+                  <app-media [media]="slide.media"></app-media>
+                </div>
+              </div>
+
+              <div class="col mx-md-4 d-md-flex flex-md-column justify-content-center">
+
+                <h5 class="card-title mb-3 fs-3 text-primary text-center"><u>{{ slide.title }}</u></h5>
+
+                <p class="card-text lead"
+                  style="text-align: justify;"
+                  *ngIf="slide.slide_type === 'content'">{{ slide.content }}</p>
+
+                <p *ngIf="slide.slide_type === 'input'"
+                  class="lead">hola soy una pregunta</p>
+
+                <!-- <app-input class="w-100" -->
+                <!--   type="{{ slide.slide_type }}" -->
+                <!--   *ngIf="slide.slide_type !== 'content'" -->
+                <!--   (changeAnswer)="changeAnswer($event)"></app-input> -->
+
+                <!-- <p class="card-text" style="text-align: justify;" *ngFor="let content of slide!.content; let last = last" > -->
+                <!--   <span *ngIf="content.slides.slide_type">hola</span> -->
+                <!--   {{ slide.content }} -->
+                <!-- </p> -->
+
+
+                  <!-- <span class="text-primary" -->
+                  <!--   *ngIf="slide!.resource_type !== 'content' && last"><strong>{{ answerText }}</strong></span></p> -->
+
+                <!-- <app-input class="w-100" -->
+                <!--   type="{{ slide!.resource_type }}" -->
+                <!--   *ngIf="slide!.resource_type !== 'content'" -->
+                <!--   (changeAnswer)="changeAnswer($event)"></app-input> -->
+              <!-- [answer]="slide!.answer" -->
+
+              </div>
+            </div>
+          </div>
+
+        <div class="card-footer">
+          <div class="d-flex justify-content-between justify-content-md-evenly">
+            <a class="prev-slide d-none d-md-block btn btn-primary" (click)="prev()">⭠ Prev</a>
+            <a class="mx-auto mx-md-0 btn btn-primary"
+              *ngIf="reachedEnd"
+              [class.disabled]="!checkCompleted()"
+              (click)="submitAndExit()">Exit
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                  <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                </svg>
+            </a>
+            <a class="next-slide d-none d-md-block btn btn-primary" (click)="next()">Next ⭢</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </swiper-slide>
+
 </swiper-container>
+
+<!--
+<ng-template #resource>
+  <div class="resource">
+    <div class="resource__content">
+      <div class="resource__content__header">
+        <h2>Resource</h2>
+        <button (click)="hideResource()">Close</button>
+      </div>
+      <div class="resource__content__body">
+        <swiper-container class="overflow-visible">
+          <swiper-slide>A</swiper-slide>
+          <swiper-slide>B</swiper-slide>
+        </swiper-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+-->
