@@ -7,9 +7,14 @@ import { LayoutModule } from './modules/layout/layout.module';
 
 import { AppComponent } from './app.component';
 
+import { ModulesComponent } from './modules/modules/modules.component';
+import { SliderComponent } from './modules/modules/components/slider/slider.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ModulesComponent,
+    SliderComponent
   ],
   imports: [
     BrowserModule,

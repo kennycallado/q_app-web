@@ -1,5 +1,21 @@
-<p>modules works!</p>
+<div class="text-center mt-4">
+  <button (click)="showPapers()">Show papers</button>
+  <button (click)="refresh()">Refresh papers</button>
+</div>
 
-<pre>{{ papers() }}</pre>
+<div class="card mx-auto mt-4" style="width: 28rem;">
+  <div class="card-header text-center text-primary">
+    <h3>Resources</h3>
+  </div>
 
-<button (click)="showPapers()">Show papers</button>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex" *ngFor="let paper of papers()">
+      <span *ngIf="paper.complete">✅</span>
+      <span *ngIf="!paper.complete">❎</span>
+      <a class="nav-link" [routerLink]="['/module/slider', paper.id]">
+        <span class="lead ms-4"> {{ paper.resource.title }}</span>
+      </a>
+      <span class="lead ms-auto me-2 text-success" style="--bs-text-opacity: .7;"> {{ resourceType(paper) }}</span>
+    </li>
+  </ul>
+</div>

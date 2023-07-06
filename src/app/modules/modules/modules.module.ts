@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModulesComponent } from './modules.component';
 
@@ -10,7 +10,8 @@ import { SliderComponent } from './components/slider/slider.component';
     SliderComponent
   ],
   imports: [
-    CommonModule
-  ]
+    CommonModule,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ModulesModule { }
