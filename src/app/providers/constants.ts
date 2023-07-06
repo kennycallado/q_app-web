@@ -5,3 +5,5 @@ export const AUTH_URL = BASE_URL + API_VERSION + 'auth/'
 export const USER_URL = BASE_URL + API_VERSION + 'user/'
 
 export const PAPER_URL = BASE_URL + API_VERSION + 'paper/'
+
+export const DEFAULT_PICTURE_URL = 'https://picsum.photos/200/300';
