@@ -8,6 +8,7 @@ import { PaperService } from 'src/app/providers/services/papers_api';
 import { PubPaper, PubPaperPush } from 'src/app/providers/models/paper';
 import { MediaComponent } from '../media/media.component';
 import { InputComponent } from '../input/input.component';
+import { StorageService } from 'src/app/providers/services/storage';
 
 @Component({
   standalone: true,
@@ -22,6 +23,7 @@ export class SliderComponent implements OnInit, AfterViewInit{
   #router   = inject(Router)
   #route    = inject(ActivatedRoute)
   #paperSvc = inject(PaperService)
+  #storageSvc = inject(StorageService)
 
   paperPush: PubPaperPush;
   paper: Signal<PubPaper>
@@ -76,7 +78,13 @@ export class SliderComponent implements OnInit, AfterViewInit{
   submitAndExit() {
     /* some staffs */
     this.answer = ''
-    this.#router.navigate(['/module']);
+    let user = this.#storageSvc.get('user')
+
+    this.paperPush.user_record = user.project.record
+    this.#paperSvc.postPaperPush(this.paperPush).subscribe((res) => {
+      user.project.record = res.user_record
+      this.#storageSvc.set('user', user)
+    })
   }
 
   next() {
@@ -96,6 +104,8 @@ export class SliderComponent implements OnInit, AfterViewInit{
       let id = parseInt(params.get('id')!);
 
       this.paper = signal(this.#paperSvc.papers().find(paper => paper.id == id))
+      this.paperPush = { ...this.paper() }
+      this.paperPush.resource_id = this.paper().resource.id
       })
   }
 

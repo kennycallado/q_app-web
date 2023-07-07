@@ -14,7 +14,7 @@ export class PubPaper {
 export class PubPaperPush {
   id: number;
   user_id: number;
-  user_record?: Record<string, number|string>[];
+  user_record?: Record<string, number|string>;
   project_id: number;
   resource_id: number;
   completed: boolean;

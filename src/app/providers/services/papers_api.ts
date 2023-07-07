@@ -2,7 +2,7 @@ import { Injectable, Signal, computed, effect, inject, isDevMode, signal } from 
 import { HttpClient } from "@angular/common/http";
 
 import { PAPER_URL } from "../constants";
-import { PubPaper } from "../models/paper"
+import { PubPaper, PubPaperPush } from "../models/paper"
 
 import { AuthService } from "./auth";
 import { StorageService } from "./storage";
@@ -28,6 +28,16 @@ export class PaperService {
 
   refresh() {
     this.initPapers()
+  }
+
+  postPaperPush(paperPush: PubPaperPush): Observable<any> {
+    let headers = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${this.#access_token()}`,
+      ContentType: 'application/json'}
+
+
+    return this.#http.post<any>(this.#paper_url + paperPush.id, paperPush, { headers })
   }
 
   private initPapers() {
