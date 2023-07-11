@@ -13,7 +13,7 @@ export class LoginComponent {
   #route   = inject(ActivatedRoute)
 
   update = effect(() => {
-    if (this.#authSvc.access_token() !== '') {
+    if (this.#authSvc.access_token !== '') {
       const returnUrl = this.#route.snapshot.queryParams['returnUrl'] || '/home';
       this.#router.navigateByUrl(returnUrl);
     }

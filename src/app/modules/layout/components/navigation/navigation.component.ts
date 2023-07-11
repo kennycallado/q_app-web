@@ -12,7 +12,7 @@ export class NavigationComponent {
   #router  = inject(Router)
 
   is_authenticated: boolean;
-  update = effect(() => this.is_authenticated = this.#authSvc.access_token() !== '' )
+  update = effect(() => this.is_authenticated = this.#authSvc.access_token !== '' )
 
   goToHome() {
     this.#router.navigate(['/home']);
