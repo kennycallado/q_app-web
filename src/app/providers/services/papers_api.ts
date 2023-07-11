@@ -8,12 +8,14 @@ import { AuthService } from "./auth";
 import { StorageService } from "./storage";
 import { Observable } from "rxjs";
 import { UserService } from "./user";
+import { DestructorService } from "./destructor";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaperService {
   #storageSvc = inject(StorageService)
+  #destrSvc   = inject(DestructorService)
   #authSvc    = inject(AuthService)
   #userSvc    = inject(UserService)
   #http       = inject(HttpClient)
@@ -26,6 +28,8 @@ export class PaperService {
   #initialized = false
   init   = effect(() => { if (!this.#initialized) this.initPapers() })
   update = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
+
+  constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   initPapers() {
     this.#initialized = true
@@ -41,7 +45,7 @@ export class PaperService {
   postPaper(paper: PubPaper) {
     let headers = {
       Accept: 'application/json',
-      Authorization: `Bearer ${this.#authSvc.access_token()}`,
+      Authorization: `Bearer ${this.#authSvc.access_token}`,
       ContentType: 'application/json'}
 
     // refrescar user.project.record
@@ -61,7 +65,7 @@ export class PaperService {
   private getApiPaper(id: number): Observable<PubPaper> {
     let headers = {
       Accept: 'application/json',
-      Authorization: `Bearer ${this.#authSvc.access_token()}`,
+      Authorization: `Bearer ${this.#authSvc.access_token}`,
       ContentType: 'application/json'}
 
     return this.#http.get<PubPaper>(this.#paper_url + id, { headers })
@@ -71,15 +75,13 @@ export class PaperService {
     let user = this.#storageSvc.get('user')
     let headers = {
       Accept: 'application/json',
-      Authorization: `Bearer ${this.#authSvc.access_token()}`,
+      Authorization: `Bearer ${this.#authSvc.access_token}`,
       ContentType: 'application/json'}
 
     return this.#http.get<PubPaper[]>(this.#paper_url + `user/${user.id}`, { headers })
   }
 
-  destroy() {
+  destructor() {
     this.#papers.set([])
-    // this.init.destroy()
-    // this.update.destroy()
   }
 }

@@ -1,9 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+// import { DestructorService } from "./destructor";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  // #destrSvc = inject(DestructorService)
+
+  constructor() { /* this.#destrSvc.add(() => this.clear()) */ }
 
   set(key: string, value: any): void {
     if (key === 'access_token') throw new Error('Use AuthService instead');
@@ -21,7 +25,7 @@ export class StorageService {
     window.localStorage.removeItem(key);
   }
 
-  destroy(): void {
+  clear(): void {
     window.localStorage.clear();
   }
 }

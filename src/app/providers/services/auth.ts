@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal, inject, isDevMode, signal } from '@angular/core';
+import { Injectable, Signal, effect, inject, isDevMode, signal } from '@angular/core';
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
@@ -7,7 +7,7 @@ import { AUTH_URL } from '../constants';
 
 import { StorageService } from './storage';
 import { UserService } from './user';
-// import { PaperService } from './papers_api';
+import { DestructorService } from './destructor';
 
 type AuthUser = {
   user: string;
@@ -19,13 +19,14 @@ type AuthUser = {
 })
 export class AuthService {
   #storageSvc = inject(StorageService)
+  #destrSvc   = inject(DestructorService)
   #userSvc    = inject(UserService)
   #http       = inject(HttpClient)
 
   #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
 
   #access_token = signal<string>(localStorage.getItem('access_token') || '')
-  get access_token(): Signal<string> {
+  get access_token(): string {
     const HOURS = 60 * 60 * 12;
 
     if (this.#access_token() !== '') {
@@ -49,8 +50,10 @@ export class AuthService {
       // this.#userSvc.me(this.#access_token())
     }
 
-    return this.#access_token;
+    return this.#access_token();
   }
+
+  update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
 
   login(token: string): void {
     this.#http.post<AuthUser>(this.#auth_url + 'login', token, { withCredentials: true })
@@ -67,8 +70,7 @@ export class AuthService {
     this.#http.get(this.#auth_url + 'logout', { withCredentials: true }).subscribe();
 
     this.destroy()
-    this.#userSvc.destroy()
-    this.#storageSvc.destroy()
+    this.#destrSvc.destructor()
   }
 
   destroy() {

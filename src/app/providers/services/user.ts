@@ -4,12 +4,14 @@ import { Injectable, computed, effect, inject, isDevMode, signal } from '@angula
 import { USER_URL } from '../constants';
 
 import { StorageService } from './storage';
+import { DestructorService } from './destructor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   #storageSvc = inject(StorageService)
+  #destrSvc   = inject(DestructorService)
   #http       = inject(HttpClient)
 
   #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
@@ -17,6 +19,8 @@ export class UserService {
   #user       = signal<any>(this.#storageSvc.get('user') || {})
   user        = computed(() => this.#user())
   user_update = effect(() => { this.#storageSvc.set('user', this.#user()) })
+
+  constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   update_record(record: string) {
     this.#user.update((user) => { user.project.record = record })
@@ -30,8 +34,7 @@ export class UserService {
     this.#http.get<any>(this.#user_url + 'me/', { headers }).subscribe(res => this.#user.set(res))
   }
 
-  destroy() {
+  destructor() {
     this.#user.set({})
-    this.user_update.destroy()
   }
 }
