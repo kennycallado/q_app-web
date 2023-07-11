@@ -19,15 +19,6 @@ export class InputComponent {
 
   spellAnswer: string
 
-  constructor() {
-    if (!this.answer) {
-      this.answer = new PubAnswer()
-    }
-
-    this.spell(this.answer.answer)
-  }
-
-
   spell(answer: string) {
     switch (answer) {
       case '0':
@@ -68,5 +59,11 @@ export class InputComponent {
     this.answer.answer = input.value;
 
     this.changeAnswer.emit(this.answer);
+  }
+
+  ngOnInit(): void {
+    if (!this.answer) { this.answer = new PubAnswer() }
+
+    this.spell(this.answer.answer)
   }
 }
