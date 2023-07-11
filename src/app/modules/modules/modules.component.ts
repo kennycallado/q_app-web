@@ -1,6 +1,6 @@
-import { Component, Signal, inject } from '@angular/core';
-import { PubPaper } from 'src/app/providers/models/paper';
+import { Component, inject } from '@angular/core';
 import { PaperService } from 'src/app/providers/services/papers_api';
+import { UserService } from 'src/app/providers/services/user';
 
 @Component({
   selector: 'app-modules',
@@ -9,6 +9,19 @@ import { PaperService } from 'src/app/providers/services/papers_api';
 })
 export class ModulesComponent {
   #paperSvc = inject(PaperService)
+  #userSvc  = inject(UserService)
 
-  papers: Signal<PubPaper[]> = this.#paperSvc.papers;
+  papers = this.#paperSvc.papers
+
+  ngAfterViewInit() {
+    this.#paperSvc.initPapers()
+  }
+
+  refresh_papers() {
+    this.#paperSvc.initPapers()
+  }
+
+  refresh_record() {
+    this.#userSvc.me()
+  }
 }
