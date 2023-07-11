@@ -21,7 +21,7 @@ export class StorageService {
     window.localStorage.removeItem(key);
   }
 
-  clear(): void {
+  destroy(): void {
     window.localStorage.clear();
   }
 }
