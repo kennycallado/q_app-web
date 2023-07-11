@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal, effect, inject, isDevMode, signal } from '@angular/core';
+import { Injectable, Injector, Signal, effect, inject, isDevMode, signal } from '@angular/core';
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 import { AUTH_URL } from '../constants';
 
-import { StorageService } from './storage';
 import { UserService } from './user';
 import { DestructorService } from './destructor';
 
@@ -18,13 +17,13 @@ type AuthUser = {
   providedIn: 'root'
 })
 export class AuthService {
-  #storageSvc = inject(StorageService)
   #destrSvc   = inject(DestructorService)
-  #userSvc    = inject(UserService)
+  #injecot    = inject(Injector)
   #http       = inject(HttpClient)
 
   #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
 
+  update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
   #access_token = signal<string>(localStorage.getItem('access_token') || '')
   get access_token(): string {
     const HOURS = 60 * 60 * 12;
@@ -36,32 +35,29 @@ export class AuthService {
       if (payload.exp - now < HOURS) {
         this.#http.get<AuthUser>(this.#auth_url, { withCredentials: true })
           .subscribe((auth) => {
+            // maybe move this outside the subscription
+            const userSvc = this.#injecot.get(UserService)
+
             localStorage.setItem('access_token', auth.access_token)
-
             this.#access_token.set(auth.access_token)
-            this.#userSvc.me(this.#access_token())
+
+            userSvc.me()
           });
-
-          // this.#userSvc.me(this.#access_token())
       }
-
-      // update user to ensure the record is update
-      // this make a lot of request to the server
-      // this.#userSvc.me(this.#access_token())
     }
 
     return this.#access_token();
   }
 
-  update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
-
   login(token: string): void {
     this.#http.post<AuthUser>(this.#auth_url + 'login', token, { withCredentials: true })
       .subscribe((auth) => {
-        localStorage.setItem('access_token', auth.access_token)
-        this.#access_token.set(auth.access_token)
+        const userSvc = this.#injecot.get(UserService)
 
-        this.#userSvc.me(auth.access_token)
+        localStorage.setItem('access_token', auth.access_token)
+
+        this.#access_token.set(auth.access_token)
+        userSvc.me()
       });
   }
 
@@ -76,12 +72,4 @@ export class AuthService {
   destroy() {
     this.#access_token.set('')
   }
-
-  // private me(access_token: string): Observable<any> {
-  //   let headers = {
-  //     Authorization: 'Bearer ' + access_token,
-  //     ContentType: 'application/json'}
-
-  //   return this.#http.get<any>(this.#user_url + 'me/', { headers })
-  // }
 }

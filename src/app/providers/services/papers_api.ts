@@ -24,15 +24,16 @@ export class PaperService {
 
   #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [])
   papers  = computed(() => this.#papers())
-
-  #initialized = false
-  init   = effect(() => { if (!this.#initialized) this.initPapers() })
   update = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
+
+  // initialized = false
+  // init   = effect(() => { if (!this.initialized()) this.initPapers() }, { allowSignalWrites: true })
 
   constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   initPapers() {
-    this.#initialized = true
+    // this.initialized = true
+    this.#userSvc.me()
 
     this.getApiPapers().subscribe((papers) => {
       for (let paper of papers) {
@@ -55,11 +56,8 @@ export class PaperService {
       user_record: this.#userSvc.user().project.record,
     }
 
-    // subscribe here?
     this.#http.post<any>(this.#paper_url + paperPush.id, paperPush, { headers })
-      .subscribe((res) => {
-      this.#userSvc.update_record(res.user_record)
-    })
+      .subscribe((res) => { this.#userSvc.update_record(res.user_record) })
   }
 
   private getApiPaper(id: number): Observable<PubPaper> {

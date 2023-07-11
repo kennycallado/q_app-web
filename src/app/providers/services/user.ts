@@ -5,6 +5,7 @@ import { USER_URL } from '../constants';
 
 import { StorageService } from './storage';
 import { DestructorService } from './destructor';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { DestructorService } from './destructor';
 export class UserService {
   #storageSvc = inject(StorageService)
   #destrSvc   = inject(DestructorService)
+  #authSvc    = inject(AuthService)
   #http       = inject(HttpClient)
 
   #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
@@ -23,15 +25,27 @@ export class UserService {
   constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   update_record(record: string) {
-    this.#user.update((user) => { user.project.record = record })
+    this.#user.set({...this.#user(), project: {...this.#user().project, record: record}})
   }
 
-  me(access_token: string) {
+  get_record(access_token: string) {
     let headers = {
       Authorization: 'Bearer ' + access_token,
       ContentType: 'application/json'}
 
     this.#http.get<any>(this.#user_url + 'me/', { headers }).subscribe(res => this.#user.set(res))
+
+    return this.#user().project.record
+  }
+
+  me() {
+    let url = this.#user().id ? this.#user_url + this.#user().id + '/' : this.#user_url + 'me/' ;
+
+    let headers = {
+      Authorization: 'Bearer ' + this.#authSvc.access_token,
+      ContentType: 'application/json'}
+
+    this.#http.get<any>(url, { headers }).subscribe(res => this.#user.set(res))
   }
 
   destructor() {
