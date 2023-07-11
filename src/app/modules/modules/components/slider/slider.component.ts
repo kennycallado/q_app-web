@@ -1,14 +1,14 @@
 import { register } from 'swiper/element/bundle'
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Signal, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
+import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, Signal, ViewEncapsulation, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { PaperService } from 'src/app/providers/services/papers_api';
-import { PubPaper, PubPaperPush } from 'src/app/providers/models/paper';
+import { PubPaper } from 'src/app/providers/models/paper';
 import { MediaComponent } from '../media/media.component';
 import { InputComponent } from '../input/input.component';
-import { StorageService } from 'src/app/providers/services/storage';
+import { PubAnswer } from 'src/app/providers/models/answer';
 
 @Component({
   standalone: true,
@@ -20,47 +20,67 @@ import { StorageService } from 'src/app/providers/services/storage';
   imports: [CommonModule, MediaComponent, InputComponent]
 })
 export class SliderComponent implements OnInit, AfterViewInit{
-  #router   = inject(Router)
-  #route    = inject(ActivatedRoute)
-  #paperSvc = inject(PaperService)
-  #storageSvc = inject(StorageService)
+  #router     = inject(Router)
+  #route      = inject(ActivatedRoute)
+  #paperSvc   = inject(PaperService)
 
-  paperPush: PubPaperPush;
   paper: Signal<PubPaper>
-  answer: string
+  // answer: string
 
   allowSlideNext: boolean = true;
+  allowSlidePrev: boolean = true;
   reachedEnd: boolean = false;
 
-  changeAnswer(answer: string) {
-    switch (answer) {
-      case '0':
-        this.answer = 'N/C';
-        break;
-      case '1':
-        this.answer = 'Nada';
-        break;
-      case '2':
-        this.answer = 'Poco';
-        break;
-      case '3':
-        this.answer = 'Medio';
-        break;
-      case '4':
-        this.answer = 'Bastante';
-        break;
-      case '5':
-        this.answer = 'Mucho';
-        break;
-      case '6':
-        this.answer = 'Totalmente';
-        break;
+  answerFromQuestionId(question_id: number) {
+    return this.paper().answers.find(a => a.question_id == question_id)
+  }
+
+  changeAnswer(answer: PubAnswer) {
+    // check if the answer.question_id is already in the paper
+    if (this.paper().answers.find(a => a.question_id == answer.question_id)) {
+      // if it is, replace it
+      this.paper().answers = this.paper().answers.map(a => {
+        if (a.question_id == answer.question_id) {
+          return answer
+        }
+        return a
+      })
+    } else {
+      // if it is not, add it
+      this.paper().answers.push(answer)
     }
 
-    if (answer === '0') {
-      // this.slide!.answer = '';
-      return ;
-    }
+    console.log(this.paper().answers)
+
+
+    // switch (answer) {
+    //   case '0':
+    //     this.answer = 'N/C';
+    //     break;
+    //   case '1':
+    //     this.answer = 'Nada';
+    //     break;
+    //   case '2':
+    //     this.answer = 'Poco';
+    //     break;
+    //   case '3':
+    //     this.answer = 'Medio';
+    //     break;
+    //   case '4':
+    //     this.answer = 'Bastante';
+    //     break;
+    //   case '5':
+    //     this.answer = 'Mucho';
+    //     break;
+    //   case '6':
+    //     this.answer = 'Totalmente';
+    //     break;
+    // }
+
+    // if (answer === '0') {
+    //   // this.slide!.answer = '';
+    //   return ;
+    // }
 
     // this.submit(); // side effect ??
     return ;
@@ -77,25 +97,26 @@ export class SliderComponent implements OnInit, AfterViewInit{
 
   submitAndExit() {
     /* some staffs */
-    this.answer = ''
-    let user = this.#storageSvc.get('user')
+    // this.answer = ''
 
-    this.paperPush.user_record = user.project.record
-    this.#paperSvc.postPaperPush(this.paperPush).subscribe((res) => {
-      user.project.record = res.user_record
-      this.#storageSvc.set('user', user)
-    })
+    // maybe subscribe at the paper service ??
+    this.#paperSvc.postPaper(this.paper());
+    this.#router.navigate(['module'])
   }
 
-  next() {
+  next(text: string) {
+    if (!text) return ; // prevent double execution
+
     // clean the answer
-    this.answer = ''
+    // this.answer = ''
 
   }
 
-  prev() {
+  prev(text: string) {
+    if (!text) return ; // prevent double execution
+
     // clean the answer
-    this.answer = ''
+    // this.answer = ''
 
   }
 
@@ -104,9 +125,8 @@ export class SliderComponent implements OnInit, AfterViewInit{
       let id = parseInt(params.get('id')!);
 
       this.paper = signal(this.#paperSvc.papers().find(paper => paper.id == id))
-      this.paperPush = { ...this.paper() }
-      this.paperPush.resource_id = this.paper().resource.id
-      })
+      console.log(this.paper())
+    })
   }
 
   ngAfterViewInit(): void {

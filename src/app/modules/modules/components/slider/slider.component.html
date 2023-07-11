@@ -2,17 +2,18 @@
   auto-height="false"
   loop="false"
   [attr.allow-slide-next]="allowSlideNext"
+  [attr.allow-slide-prev]="allowSlidePrev"
   slides-per-view="1"
   space-between="200"
   navigation="true"
   navigation-next-el=".next-slide"
   navigation-prev-el=".prev-slide"
-  (slidenexttransitionstart)="next()"
-  (slideprevtransitionstart)="prev()"
+  (slidenexttransitionstart)="next('navigate')"
+  (slideprevtransitionstart)="prev('navigate')"
   (reachend)="reachEnd()"
   #swiper>
 
-  <swiper-slide *ngFor="let slide of paper().resource.content[paper().resource.resource_type]">
+  <swiper-slide *ngFor="let slide of paper().resource.content.slides">
     <div class="d-flex align-items-center position-relative mt-4 mt-md-5">
       <div class="card mx-auto" style="margin-top: 100px; width: 100%;">
 
@@ -37,36 +38,11 @@
                   style="text-align: justify;"
                   *ngIf="slide.slide_type === 'content'">{{ slide.content }}</p>
 
-                <!-- <p *ngIf="slide.slide_type === 'input'" -->
-                <!--   class="lead">hola soy una pregunta</p> -->
-
-                <p>
-                  <span class="lead"
-                    *ngIf="slide.slide_type !== 'content'">{{ slide.question.question }}</span>
-
-                  <span class="text-primary"
-                    *ngIf="slide.slide_type !== 'content'"><strong> {{ answer }}</strong></span>
-                </p>
                 <app-input class="w-100"
-                  type="{{ slide.question.question_type }}"
                   *ngIf="slide.slide_type !== 'content'"
+                  [answer]="answerFromQuestionId(slide.question.id)"
+                  [question]="slide.question"
                   (changeAnswer)="changeAnswer($event)"></app-input>
-
-                <!-- <p class="card-text" style="text-align: justify;" *ngFor="let content of slide!.content; let last = last" > -->
-                <!--   <span *ngIf="content.slides.slide_type">hola</span> -->
-                <!--   {{ slide.content }} -->
-                <!-- </p> -->
-
-
-                  <!-- <span class="text-primary" -->
-                  <!--   *ngIf="slide!.resource_type !== 'content' && last"><strong>{{ answerText }}</strong></span></p> -->
-
-                <!-- <app-input class="w-100" -->
-                <!--   type="{{ slide!.resource_type }}" -->
-                <!--   *ngIf="slide!.resource_type !== 'content'" -->
-                <!--   (changeAnswer)="changeAnswer($event)"></app-input> -->
-              <!-- [answer]="slide!.answer" -->
-
               </div>
             </div>
           </div>
@@ -91,22 +67,3 @@
   </swiper-slide>
 
 </swiper-container>
-
-<!--
-<ng-template #resource>
-  <div class="resource">
-    <div class="resource__content">
-      <div class="resource__content__header">
-        <h2>Resource</h2>
-        <button (click)="hideResource()">Close</button>
-      </div>
-      <div class="resource__content__body">
-        <swiper-container class="overflow-visible">
-          <swiper-slide>A</swiper-slide>
-          <swiper-slide>B</swiper-slide>
-        </swiper-container>
-      </div>
-    </div>
-  </div>
-</ng-template>
--->
