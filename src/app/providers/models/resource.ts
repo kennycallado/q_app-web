@@ -3,9 +3,10 @@ import { PubSlide } from "./slide";
 
 export type PubResourceType = {
   slides?: PubSlide[];
-  form?: PubQuestion[];
+  form?: PubQuestion[] | [PubQuestion[]];
   external?: number;
 }
+
 export class PubResource {
   id: number;
   title: string;
