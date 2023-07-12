@@ -23,6 +23,7 @@ export class AuthService {
   #http       = inject(HttpClient)
 
   #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
+  // #auth_url   = "http://localhost:8003/auth/"
 
   update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
   #access_token = signal<string>(localStorage.getItem('access_token') || '')

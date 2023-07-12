@@ -21,6 +21,7 @@ export class PaperService {
   #http       = inject(HttpClient)
 
   #paper_url  = isDevMode() ? "http://localhost:8032/api/v1/paper/" : PAPER_URL ;
+  // #paper_url  = "http://localhost:8032/api/v1/paper/"
 
   #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [])
   papers  = computed(() => this.#papers())
