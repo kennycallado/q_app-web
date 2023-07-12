@@ -9,11 +9,13 @@ import { AppComponent } from './app.component';
 
 import { ModulesComponent } from './modules/modules/modules.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { HomeComponent } from './modules/main/components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ModulesComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

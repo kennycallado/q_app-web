@@ -1,1 +1,28 @@
-<p>home works!</p>
+<!-- <h2 class="text-center">add Notifications</h2> -->
+<!-- <button (click)="addMessage()" class="w-100 btn btn-primary mb-3 fw-bold">Add one</button> -->
+<!-- <h2 class="text-center">Subscribe</h2> -->
+<!-- <button (click)="subscribeNotifications()" class="w-100 btn btn-primary mb-3 fw-bold">Subscribe</button> -->
+
+<h1 class="text-center mt-3">Notifications</h1>
+
+<div class="card mb-3" *ngFor="let message of messages(); let i = index">
+  <div class="card-header d-flex justify-content-between">
+
+    <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapsable-{{i}}">
+      <span class="lead">🔔 </span>
+    </a>
+
+    <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapsable-{{i}}">
+      <span class="text-success fw-bold">{{ message.title }}</span>
+    </a>
+
+    <span
+      (click)="removeMessage(message.id)"
+      style="cursor: pointer;"
+      class="my-auto">❌</span>
+  </div>
+
+  <div class="card-body collapse" id="collapsable-{{i}}">
+    <p *ngFor="let text of message.data.content" class="card-text text-center lead">{{ text }}</p>
+  </div>
+</div>
