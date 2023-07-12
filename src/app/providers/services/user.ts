@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, isDevMode, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { USER_URL } from '../constants';
 
@@ -29,20 +30,25 @@ export class UserService {
     this.#user.set({...this.#user(), project: {...this.#user().project, record: record}})
   }
 
-  get_record() {
-    this.me()
-
-    return this.#user().project.record
-  }
+  // get_record() {
+  //   this.get_api_user().subscribe(res => {
+  //     this.#user.set(res)
+  //     return this.#user().project.record
+  //   })
+  // }
 
   me() {
+    this.get_api_user().subscribe(res => this.#user.set(res))
+  }
+
+  private get_api_user(): Observable<PubUser> {
     let url = this.#user().id ? this.#user_url + this.#user().id + '/' : this.#user_url + 'me/' ;
 
     let headers = {
       Authorization: 'Bearer ' + this.#authSvc.access_token,
       ContentType: 'application/json'}
 
-    this.#http.get<PubUser>(url, { headers }).subscribe(res => this.#user.set(res))
+    return this.#http.get<PubUser>(url, { headers })
   }
 
   destructor() {
