@@ -1,4 +1,4 @@
-export type UserProject = {
+export type PubUserProject = {
   id: number;
   user_id: number;
   project_id: number;
@@ -7,17 +7,17 @@ export type UserProject = {
   record: Record<string, number | string>;
 }
 
-export type Role = {
+export type PubRole = {
   id: number;
   name: string;
 }
 
-export class User {
+export class PubUser {
   id: number;
-  depends_on: User;
-  role: Role;
+  depends_on: PubUser;
+  role: PubRole;
   user_token: string;
-  project: UserProject;
+  project: PubUserProject;
   created_at: Date;
   updated_at: Date;
 }

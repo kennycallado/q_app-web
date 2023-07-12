@@ -7,9 +7,10 @@ import { AUTH_URL } from '../constants';
 
 import { UserService } from './user';
 import { DestructorService } from './destructor';
+import { PubUser } from '../models/user';
 
 type AuthUser = {
-  user: string;
+  user: PubUser;
   access_token: string;
 }
 

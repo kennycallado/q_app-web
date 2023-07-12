@@ -6,6 +6,7 @@ import { USER_URL } from '../constants';
 import { StorageService } from './storage';
 import { DestructorService } from './destructor';
 import { AuthService } from './auth';
+import { PubUser } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,22 +19,18 @@ export class UserService {
 
   #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
 
-  #user       = signal<any>(this.#storageSvc.get('user') || {})
+  #user       = signal<PubUser>(this.#storageSvc.get('user') as PubUser || new PubUser)
   user        = computed(() => this.#user())
   user_update = effect(() => { this.#storageSvc.set('user', this.#user()) })
 
   constructor() { this.#destrSvc.add(() => this.destructor()) }
 
-  update_record(record: string) {
+  update_record(record: Record<string, number | string>) {
     this.#user.set({...this.#user(), project: {...this.#user().project, record: record}})
   }
 
-  get_record(access_token: string) {
-    let headers = {
-      Authorization: 'Bearer ' + access_token,
-      ContentType: 'application/json'}
-
-    this.#http.get<any>(this.#user_url + 'me/', { headers }).subscribe(res => this.#user.set(res))
+  get_record() {
+    this.me()
 
     return this.#user().project.record
   }
@@ -45,10 +42,10 @@ export class UserService {
       Authorization: 'Bearer ' + this.#authSvc.access_token,
       ContentType: 'application/json'}
 
-    this.#http.get<any>(url, { headers }).subscribe(res => this.#user.set(res))
+    this.#http.get<PubUser>(url, { headers }).subscribe(res => this.#user.set(res))
   }
 
   destructor() {
-    this.#user.set({})
+    this.#user.set(new PubUser)
   }
 }
