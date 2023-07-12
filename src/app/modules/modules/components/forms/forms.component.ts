@@ -8,13 +8,14 @@ import { PaperService } from 'src/app/providers/services/papers_api';
 import { PubPaper } from 'src/app/providers/models/paper';
 import { MediaComponent } from '../media/media.component';
 import { InputComponent } from '../input/input.component';
+import { PubAnswer } from 'src/app/providers/models/answer';
 
 @Component({
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   selector: 'app-slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.sass'],
+  templateUrl: './forms.component.html',
+  styleUrls: ['./forms.component.sass'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [CommonModule, MediaComponent, InputComponent]
 })
@@ -24,17 +25,84 @@ export class FormsComponent implements OnInit, AfterViewInit{
   #paperSvc   = inject(PaperService)
 
   paper: Signal<PubPaper>
-  answer: string
 
   allowSlideNext: boolean = true;
+  allowSlidePrev: boolean = true;
+
   reachedEnd: boolean = false;
+  completed: boolean = false;
+
+  answerFromQuestionId(question_id: number) {
+    return this.paper().answers.find(a => a.question_id == question_id)
+  }
+
+  changeAnswer(answer: PubAnswer) {
+    // check if the answer.question_id is already in the paper
+    if (this.paper().answers.find(a => a.question_id == answer.question_id)) {
+      // if it is, replace it
+      this.paper().answers = this.paper().answers.map(a => {
+        if (a.question_id == answer.question_id) {
+          return answer
+        }
+        return a
+      })
+    } else {
+      // if it is not, add it
+      this.paper().answers.push(answer)
+    }
+
+    if (this.checkCompleted()) this.completed = true
+    return ;
+  }
+
+  checkCompleted() {
+    const neted = this.checkIsNested(this.paper().resource.content.form)
+    if (neted) {
+      const flat = this.paper().resource.content.form.flat()
+
+      if (this.paper().answers.length === flat.length) return true
+    }
+
+    if (this.paper().answers.length === this.paper().resource.content.form.length) return true
+
+    return false
+  }
+
+  submitAndExit() {
+    if (!this.checkCompleted()) return ;
+
+    this.#paperSvc.postPaper(this.paper());
+    this.reachedEnd = false;
+
+    this.#router.navigate(['module'])
+  }
+
+  reachEnd() {
+    if (!this.paper) return ;
+    if (this.checkCompleted()) this.completed = true
+    this.reachedEnd = true;
+  }
+
+  next(text: string) {
+    if (!text) return ; // prevent double execution
+  }
+
+  prev(text: string) {
+    if (!text) return ; // prevent double execution
+  }
+
+  checkIsNested(array: Array<any>) {
+    if (Array.isArray(array[0]) ) return true
+  }
 
   ngOnInit(): void {
+    this.reachedEnd = false;
+    this.completed = false;
+
     this.#route.paramMap.subscribe((params: ParamMap) => {
       let id = parseInt(params.get('id')!);
 
       this.paper = signal(this.#paperSvc.papers().find(paper => paper.id == id))
-      console.log(this.paper())
     })
   }
 

@@ -25,11 +25,12 @@ export class SliderComponent implements OnInit, AfterViewInit{
   #paperSvc   = inject(PaperService)
 
   paper: Signal<PubPaper>
-  // answer: string
 
   allowSlideNext: boolean = true;
   allowSlidePrev: boolean = true;
+
   reachedEnd: boolean = false;
+  completed: boolean = false;
 
   answerFromQuestionId(question_id: number) {
     return this.paper().answers.find(a => a.question_id == question_id)
@@ -50,82 +51,55 @@ export class SliderComponent implements OnInit, AfterViewInit{
       this.paper().answers.push(answer)
     }
 
-    console.log(this.paper().answers)
-
-
-    // switch (answer) {
-    //   case '0':
-    //     this.answer = 'N/C';
-    //     break;
-    //   case '1':
-    //     this.answer = 'Nada';
-    //     break;
-    //   case '2':
-    //     this.answer = 'Poco';
-    //     break;
-    //   case '3':
-    //     this.answer = 'Medio';
-    //     break;
-    //   case '4':
-    //     this.answer = 'Bastante';
-    //     break;
-    //   case '5':
-    //     this.answer = 'Mucho';
-    //     break;
-    //   case '6':
-    //     this.answer = 'Totalmente';
-    //     break;
-    // }
-
-    // if (answer === '0') {
-    //   // this.slide!.answer = '';
-    //   return ;
-    // }
-
-    // this.submit(); // side effect ??
+    if (this.checkCompleted()) this.completed = true
     return ;
   }
 
-  reachEnd() {
-    this.reachedEnd = true;
-    this.checkCompleted();
-  }
-
   checkCompleted() {
-    return true
+    if (this.paper().resource.resource_type === 'module') return true
+    else if (this.paper().resource.resource_type === 'slides') {
+      let n_questions: number = 0;
+      for (const slide of this.paper().resource.content.slides) {
+        if (slide.slide_type === 'input') n_questions += 1
+      }
+
+      if (n_questions == this.paper().answers.length) return true
+    }
+
+    return false
   }
 
   submitAndExit() {
-    /* some staffs */
-    // this.answer = ''
+    if (!this.checkCompleted()) return ;
 
-    // maybe subscribe at the paper service ??
     this.#paperSvc.postPaper(this.paper());
+    this.reachedEnd = false;
+
     this.#router.navigate(['module'])
+  }
+
+  reachEnd() {
+    if (!this.paper) return ;
+    if (this.checkCompleted()) this.completed = true
+    this.reachedEnd = true;
   }
 
   next(text: string) {
     if (!text) return ; // prevent double execution
-
-    // clean the answer
-    // this.answer = ''
-
   }
 
   prev(text: string) {
     if (!text) return ; // prevent double execution
-
-    // clean the answer
-    // this.answer = ''
-
   }
 
   ngOnInit(): void {
+    this.reachedEnd = false;
+    this.completed = false;
+
     this.#route.paramMap.subscribe((params: ParamMap) => {
       let id = parseInt(params.get('id')!);
 
       this.paper = signal(this.#paperSvc.papers().find(paper => paper.id == id))
-      console.log(this.paper())
     })
   }
 
