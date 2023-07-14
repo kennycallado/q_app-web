@@ -1,15 +1,14 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutModule } from './modules/layout/layout.module';
 
 import { AppComponent } from './app.component';
-
-import { ModulesComponent } from './modules/modules/modules.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { HomeComponent } from './modules/main/components/home/home.component';
+import { ModulesComponent } from './modules/modules/modules.component';
 
 @NgModule({
   declarations: [
