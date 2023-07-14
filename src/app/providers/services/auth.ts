@@ -52,7 +52,7 @@ export class AuthService {
   }
 
   login(token: string): void {
-    this.#http.post<AuthUser>(this.#auth_url + 'login', token, { withCredentials: true })
+    this.#http.post<AuthUser>(this.#auth_url + 'login', JSON.stringify(token), { withCredentials: true })
       .subscribe((auth) => {
         const userSvc = this.#injecot.get(UserService)
 
