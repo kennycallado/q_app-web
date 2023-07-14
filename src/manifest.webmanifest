@@ -1,7 +1,13 @@
 {
-  "name": "q_app-web",
-  "short_name": "q_app-web",
-  "theme_color": "#1976d2",
+  "protocol_handlers": [{
+    "protocol": "web+qapp",
+    "url": "/%s"
+  }],
+  "version": "0.1.0",
+  "lang": "es",
+  "name": "q-app-web",
+  "short_name": "q-app-web",
+  "theme_color": "#0d6efd",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
