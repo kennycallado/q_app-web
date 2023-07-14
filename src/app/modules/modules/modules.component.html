@@ -1,29 +1,30 @@
-<div class="text-center">
-  <button (click)="refresh_papers()">Refresh Papers</button>
-  <button (click)="refresh_record()">Refresh Record</button>
-</div>
+<!-- <div class="text-center"> -->
+<!--   <button (click)="refresh_papers()">Refresh Papers</button> -->
+<!--   <button (click)="refresh_record()">Refresh Record</button> -->
+<!-- </div> -->
 
-<div class="card mx-auto mt-4" style="width: 28rem;">
+<!-- <div class="card mx-auto mt-4" style="width: 28rem;"> -->
+<div class="card mx-auto mt-4">
   <div class="card-header text-center text-primary">
     <h3>Resources</h3>
   </div>
 
   <ul class="list-group list-group-flush">
     <li class="list-group-item d-flex" *ngFor="let paper of papers()">
-      <span *ngIf="paper.complete">✅</span>
-      <span *ngIf="!paper.complete">❎</span>
-      <a class="nav-link"
+      <span class="mt-auto me-2" *ngIf="paper.complete">✅</span>
+      <span class="mt-auto me-2" *ngIf="!paper.complete">❎</span>
+      <a class="nav-link m-auto text-truncate"
         *ngIf="paper.resource.resource_type === 'slides' || paper.resource.resource_type === 'module'"
         [routerLink]="['/module/slider', paper.id]">
-        <span class="lead ms-4"> {{ paper.resource.title }}</span>
+        <span class="lead">{{ paper.resource.title }} - blablkdasjlfkjasdflkjadlsfkjalsdkjfalsjflkdasjflajdslk</span>
       </a>
 
-      <a class="nav-link"
+      <a class="nav-link m-auto text-truncate"
         *ngIf="paper.resource.resource_type === 'form'"
         [routerLink]="['/module/forms', paper.id]">
-        <span class="lead ms-4"> {{ paper.resource.title }}</span>
+        <span class="lead">{{ paper.resource.title }}</span>
       </a>
-      <span class="lead ms-auto me-2 text-success" style="--bs-text-opacity: .7;"> {{ paper.resource.resource_type }}</span>
+      <span class="mt-auto ms-2 text-info" style="--bs-text-opacity: .7;">{{ paper.resource.resource_type }}</span>
     </li>
   </ul>
 </div>
