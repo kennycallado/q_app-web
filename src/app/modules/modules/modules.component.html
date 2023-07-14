@@ -11,12 +11,12 @@
 
   <ul class="list-group list-group-flush">
     <li class="list-group-item d-flex" *ngFor="let paper of papers()">
-      <span class="mt-auto me-2" *ngIf="paper.complete">✅</span>
-      <span class="mt-auto me-2" *ngIf="!paper.complete">❎</span>
-      <a class="nav-link m-auto text-truncate"
+      <span class="mt-auto" *ngIf="paper.complete">✅</span>
+      <span class="mt-auto" *ngIf="!paper.complete">❎</span>
+      <a class="nav-link mx-2 text-truncate"
         *ngIf="paper.resource.resource_type === 'slides' || paper.resource.resource_type === 'module'"
         [routerLink]="['/module/slider', paper.id]">
-        <span class="lead">{{ paper.resource.title }} - blablkdasjlfkjasdflkjadlsfkjalsdkjfalsjflkdasjflajdslk</span>
+        <span class="lead">{{ paper.resource.title }}</span>
       </a>
 
       <a class="nav-link m-auto text-truncate"
@@ -24,7 +24,7 @@
         [routerLink]="['/module/forms', paper.id]">
         <span class="lead">{{ paper.resource.title }}</span>
       </a>
-      <span class="mt-auto ms-2 text-info" style="--bs-text-opacity: .7;">{{ paper.resource.resource_type }}</span>
+      <span class="mt-auto ms-auto text-success">{{ paper.resource.resource_type }}</span>
     </li>
   </ul>
 </div>
