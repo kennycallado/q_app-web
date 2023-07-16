@@ -1,3 +1,4 @@
+export const VAPID_PUBLIC_KEY = "BEiXD93a1MhsHGNdnTYChocRr9I58XvO9kpZwMNvZc9QJFGyH5xyACAZtpykcKmszknPfqgDCMxutZyjGE2s-E0"
 const BASE_URL = 'https://questions.kennycallado.dev/'
 const API_VERSION = 'api/v1/'
 

@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http"
 import { Injectable, inject } from "@angular/core"
 import { SwPush } from "@angular/service-worker"
 
+import { VAPID_PUBLIC_KEY } from "../constants"
 import { MessageService } from "./message"
 import { Message } from "../models/message"
 
@@ -9,14 +10,12 @@ import { Message } from "../models/message"
   providedIn: 'root'
 })
 export class PushService {
-  readonly #VAPID_PUBLIC_KEY = "BOXXP18KzhgRbUCsCLjDCvsbB_2UIYE5X-fe34rWajqMh-id15BJQ_xiSA1p8yCRzMfllMFCxS6uW-9uD1xVeFg"
-
   #http           = inject(HttpClient)
   #messageSvc     = inject(MessageService)
   #swPush         = inject(SwPush)
 
   subscribe() {
-    this.#swPush.requestSubscription({ serverPublicKey: this.#VAPID_PUBLIC_KEY })
+    this.#swPush.requestSubscription({ serverPublicKey: VAPID_PUBLIC_KEY })
       .then(sub => { this.sendSubscrition(sub) })
       .catch(err => console.error("Could not subscribe to notifications", err))
   }
