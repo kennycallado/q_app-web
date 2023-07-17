@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, Signal, effect, inject, isDevMode, signal } from '@angular/core';
+import { Injectable, Injector, effect, inject, isDevMode, signal } from '@angular/core';
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
