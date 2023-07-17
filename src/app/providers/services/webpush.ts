@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http"
-import { Injectable, inject } from "@angular/core"
+import { Injectable, inject, isDevMode } from "@angular/core"
 import { SwPush } from "@angular/service-worker"
 
-import { VAPID_PUBLIC_KEY } from "../constants"
+import { MESSAGE_URL, VAPID_PUBLIC_KEY } from "../constants"
 import { MessageService } from "./message"
 import { Message } from "../models/message"
 import { AuthService } from "./auth"
@@ -17,6 +17,9 @@ export class PushService {
   #swPush         = inject(SwPush)
   #authSvc        = inject(AuthService)
   #userSvc        = inject(UserService)
+
+  #message_url    = isDevMode() ? "http://localhost:8005/api/v1/messaging/" : MESSAGE_URL
+  // #message_url    = "http://localhost:8005/api/v1/messaging/"
 
   subscribe() {
     this.#swPush.requestSubscription({ serverPublicKey: VAPID_PUBLIC_KEY })
@@ -35,8 +38,7 @@ export class PushService {
       web_token: sub.toJSON()
     }
 
-    // this.#http.put("http://localhost:9000/api/v1/messaging/token/" + user.id, to_server, { headers }).subscribe()
-    this.#http.put("http://questions.kennycallado.dev/api/v1/messaging/token/user/" + user.id, to_server, { headers }).subscribe()
+    this.#http.put(this.#message_url + user.id, to_server, { headers }).subscribe()
   }
 
   listen() {
