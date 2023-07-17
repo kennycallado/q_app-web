@@ -38,7 +38,7 @@ export class PushService {
       web_token: sub.toJSON()
     }
 
-    this.#http.put(this.#message_url + user.id, to_server, { headers }).subscribe()
+    this.#http.put(this.#message_url + "user/" + user.id, to_server, { headers }).subscribe()
   }
 
   listen() {
