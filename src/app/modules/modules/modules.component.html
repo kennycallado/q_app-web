@@ -16,13 +16,13 @@
       <a class="nav-link mx-2 text-truncate"
         *ngIf="paper.resource.resource_type === 'slides' || paper.resource.resource_type === 'module'"
         [routerLink]="['/module/slider', paper.id]">
-        <span class="lead">{{ paper.resource.title }}</span>
+        <span class="lead">{{ paper.resource.title }} - {{ paper.resource.id }}</span>
       </a>
 
-      <a class="nav-link m-auto text-truncate"
+      <a class="nav-link mx-2 text-truncate"
         *ngIf="paper.resource.resource_type === 'form'"
         [routerLink]="['/module/forms', paper.id]">
-        <span class="lead">{{ paper.resource.title }}</span>
+        <span class="lead">{{ paper.resource.title }} - {{ paper.resource.id }}</span>
       </a>
       <span class="mt-auto ms-auto text-success">{{ paper.resource.resource_type }}</span>
     </li>
