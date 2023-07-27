@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core'
 
 import { Message } from 'src/app/providers/models/message'
 import { MessageService } from 'src/app/providers/services/message'
-import { PushService } from 'src/app/providers/services/webpush'
 
 @Component({
   selector: 'app-home',
@@ -11,18 +10,8 @@ import { PushService } from 'src/app/providers/services/webpush'
 })
 export class HomeComponent {
   #messageSvc = inject(MessageService)
-  #webpushSvc = inject(PushService)
 
   messages = this.#messageSvc.messages
-
-  constructor() {
-    this.#webpushSvc.subscribe()
-  }
-
-  // unused
-  subscribeNotifications() {
-    this.#webpushSvc.subscribe()
-  }
 
   addMessage() {
     let message = new Message().new({
