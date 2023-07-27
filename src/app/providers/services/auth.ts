@@ -67,11 +67,11 @@ export class AuthService {
     // delete cookie
     this.#http.get(this.#auth_url + 'logout', { withCredentials: true }).subscribe();
 
-    this.destroy()
+    this.destructor()
     this.#destrSvc.destructor()
   }
 
-  destroy() {
+  private destructor() {
     this.#access_token.set('')
   }
 }
