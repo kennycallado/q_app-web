@@ -12,7 +12,7 @@ export class AboutComponent {
   user = this.#userSvc.user
 
   getMood() {
-    if (!this.user()) return '🙃';
+    if (this.user().id === undefined) return '🙃';
 
     return this.user().project.record.mood || '🙆'
   }
