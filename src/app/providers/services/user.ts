@@ -28,7 +28,7 @@ export class UserService {
   constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   update_record(record: Record<string, number | string>) {
-    this.#user.set({...this.#user(), project: {...this.#user().project, record: record}})
+    this.#user.set({...this.#user(), project: {...this.#user().project, record }})
   }
 
   // get_record() {
