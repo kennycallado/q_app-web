@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http"
-import { Injectable, inject, isDevMode } from "@angular/core"
+import { Injectable, effect, inject, isDevMode } from "@angular/core"
 import { SwPush } from "@angular/service-worker"
 
 import { MESSAGE_URL, VAPID_PUBLIC_KEY } from "../constants"
