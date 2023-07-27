@@ -56,4 +56,8 @@ export class PushService {
     })
 
   }
+
+  private destructor() {
+    this.#innited = false
+  }
 }
