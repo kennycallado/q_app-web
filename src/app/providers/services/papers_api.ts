@@ -80,7 +80,7 @@ export class PaperService {
     return this.#http.get<PubPaper[]>(this.#paper_url + `user/${user.id}`, { headers })
   }
 
-  destructor() {
+  private destructor() {
     this.#papers.set([])
   }
 }

@@ -52,7 +52,7 @@ export class UserService {
     return this.#http.get<PubUser>(url, { headers })
   }
 
-  destructor() {
+  private destructor() {
     this.#user.set(new PubUser)
   }
 }
