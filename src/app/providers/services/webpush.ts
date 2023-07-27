@@ -55,16 +55,19 @@ export class PushService {
 
   listen() {
     this.#swPush.messages.subscribe((message: any) => {
-      let new_message = new Message().new({
-        title: message.notification.title,
-        body: message.notification.body,
-        data: {
-          type: message.notification.data.type,
-          content: message.notification.data.content
-        }
-      })
+      if (message.notification !== undefined) this.#messageSvc.add(new Message().new({ ...message.notification }))
+      else if (message.data.token_requested === true) this.subscribe()
 
-      this.#messageSvc.add(new_message)
+      // let new_message = new Message().new({
+      //   title: message.notification.title,
+      //   body: message.notification.body,
+      //   data: {
+      //     type: message.notification.data.type,
+      //     content: message.notification.data.content
+      //   }
+      // })
+
+      // this.#messageSvc.add(new_message)
     })
 
   }
