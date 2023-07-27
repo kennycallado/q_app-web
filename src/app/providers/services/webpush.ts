@@ -17,6 +17,7 @@ export class PushService {
   #swPush         = inject(SwPush)
   #authSvc        = inject(AuthService)
   #userSvc        = inject(UserService)
+  #destrSvc       = inject(DestructorService)
 
   #message_url    = isDevMode() ? "http://localhost:8005/api/v1/messaging/" : MESSAGE_URL
   // #message_url    = "http://localhost:8005/api/v1/messaging/"
