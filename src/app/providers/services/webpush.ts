@@ -22,7 +22,18 @@ export class PushService {
   #message_url    = isDevMode() ? "http://localhost:8005/api/v1/messaging/" : MESSAGE_URL
   // #message_url    = "http://localhost:8005/api/v1/messaging/"
 
-  subscribe() {
+  // Repensar todo esto
+  // la idea: solo ejecutar subscribe() cuando el usuario
+  // se logea o cuando recibe un mensaje requiriendolo
+
+  #innited = false
+  update = effect(() => {
+    if (this.#userSvc.user().id !== undefined && !this.#innited) { this.#innited = true ; this.subscribe() }
+  })
+
+  constructor() { this.#destrSvc.add(() => this.destructor()) }
+
+  private subscribe() {
     this.#swPush.requestSubscription({ serverPublicKey: VAPID_PUBLIC_KEY })
       .then(sub => { this.sendSubscrition(sub) })
       .catch(err => console.error("Could not subscribe to notifications", err))
