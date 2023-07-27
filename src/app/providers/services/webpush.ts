@@ -7,6 +7,7 @@ import { MessageService } from "./message"
 import { Message } from "../models/message"
 import { AuthService } from "./auth"
 import { UserService } from "./user"
+import { DestructorService } from "./destructor"
 
 @Injectable({
   providedIn: 'root'
