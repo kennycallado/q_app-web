@@ -34,7 +34,7 @@ export class PaperService {
 
   initPapers() {
     // this.initialized = true
-    this.#userSvc.me()
+    this.#userSvc.me() // keeps the user updated. Should be better way
 
     this.getApiPapers().subscribe((papers) => {
       for (let paper of papers) {
