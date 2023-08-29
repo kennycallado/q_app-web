@@ -56,8 +56,11 @@ export class PushService {
 
   listen() {
     this.#swPush.messages.subscribe((message: any) => {
-      if (message.notification !== undefined) this.#messageSvc.add(new Message().new({ ...message.notification }))
-      else if (message.data.token_requested === true) this.subscribe()
+      if (message.data.token_required === true) this.subscribe()
+      if (message.notification !== undefined) {
+        this.#messageSvc.add(new Message().new({ ...message.notification }))
+        // other stuff
+      }
 
       // let new_message = new Message().new({
       //   title: message.notification.title,
