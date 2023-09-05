@@ -1,7 +1,7 @@
 import { PubQuestion } from "./question";
 import { PubSlide } from "./slide";
 
-export type PubResourceType = {
+export type PubContentType = {
   slides?: PubSlide[];
   form?: PubQuestion[] | [PubQuestion[]];
   external?: number;
@@ -12,5 +12,5 @@ export class PubResource {
   title: string;
   description: string;
   resource_type: string;
-  content: PubResourceType;
+  content: PubContentType;
 }
