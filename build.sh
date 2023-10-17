@@ -1,6 +1,6 @@
 #!/bin/bash
 
-platforms=("linux/amd64" "linux/arm64" "linux/arm/v7" "linux/arm/v6")
+platforms=("linux/amd64" "linux/arm64")
 package_name=$(jq -r '.name' package.json)
 package_version=$(jq -r '.version' package.json)
 
@@ -44,17 +44,13 @@ docker push -a kennycallado/${package_name}
 echo "Creating the manifest for the version: $package_version"
 docker manifest create kennycallado/${package_name}:${package_version} \
   kennycallado/${package_name}:${package_version}-amd64 \
-  kennycallado/${package_name}:${package_version}-arm64 \
-  kennycallado/${package_name}:${package_version}-armv7 \
-  kennycallado/${package_name}:${package_version}-armv6
+  kennycallado/${package_name}:${package_version}-arm64
 
 # manifest for latest version
 echo "Creating the manifest for latest version..."
 docker manifest create kennycallado/${package_name}:latest \
   --amend kennycallado/${package_name}:${package_version}-amd64 \
-  --amend kennycallado/${package_name}:${package_version}-arm64 \
-  --amend kennycallado/${package_name}:${package_version}-armv7 \
-  --amend kennycallado/${package_name}:${package_version}-armv6
+  --amend kennycallado/${package_name}:${package_version}-arm64
 
 
 # push the manifests
@@ -66,8 +62,6 @@ docker manifest push --purge kennycallado/${package_name}:latest
 echo "Removing the images..."
 docker rmi kennycallado/${package_name}:${package_version}-amd64
 docker rmi kennycallado/${package_name}:${package_version}-arm64
-docker rmi kennycallado/${package_name}:${package_version}-armv7
-docker rmi kennycallado/${package_name}:${package_version}-armv6
 
 # remove the manifest
 echo "Cleaning up the manifest..."
