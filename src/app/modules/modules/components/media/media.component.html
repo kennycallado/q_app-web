@@ -1,9 +1,9 @@
 <img
-  *ngIf="media.type === 'image'"
+  *ngIf="media.media_type === 'image'"
   src="{{ media.url }}" />
 
 <youtube-player
-  *ngIf="media!.type === 'video'"
+  *ngIf="media!.media_type === 'video'"
   suggestedQuality="highres"
   [height]="300"
   [width]="200"

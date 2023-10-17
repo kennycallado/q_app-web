@@ -1,6 +1,6 @@
 export type Media = {
   id: number;
   name?: string;
-  type: string;
+  media_type: string;
   url: string;
 }
