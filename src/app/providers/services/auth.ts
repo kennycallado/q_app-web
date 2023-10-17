@@ -3,10 +3,11 @@ import { Injectable, Injector, effect, inject, isDevMode, signal } from '@angula
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
-import { AUTH_URL } from '../constants';
+import { AUTH_URL, BASE_URL } from '../constants';
 
 import { UserService } from './user';
 import { DestructorService } from './destructor';
+
 import { PubUser } from '../models/user';
 
 type AuthUser = {
@@ -19,11 +20,12 @@ type AuthUser = {
 })
 export class AuthService {
   #destrSvc   = inject(DestructorService)
-  #injecot    = inject(Injector)
+  #injector   = inject(Injector)
   #http       = inject(HttpClient)
 
   #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
   // #auth_url   = "http://localhost:8003/auth/"
+  #admin_url  = isDevMode() ? "http://localhost:8080/" : BASE_URL.replace('https://', 'https://admin.')
 
   update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
   #access_token = signal<string>(localStorage.getItem('access_token') || '')
@@ -38,7 +40,7 @@ export class AuthService {
         this.#http.get<AuthUser>(this.#auth_url, { withCredentials: true })
           .subscribe((auth) => {
             // maybe move this outside the subscription
-            const userSvc = this.#injecot.get(UserService)
+            const userSvc = this.#injector.get(UserService)
 
             localStorage.setItem('access_token', auth.access_token)
             this.#access_token.set(auth.access_token)
@@ -54,7 +56,11 @@ export class AuthService {
   login(token: string): void {
     this.#http.post<AuthUser>(this.#auth_url + 'login', JSON.stringify(token), { withCredentials: true })
       .subscribe((auth) => {
-        const userSvc = this.#injecot.get(UserService)
+        if (auth.user.role.id < 4) {
+          window.location.href = this.#admin_url + 'token?access_token=' + auth.access_token
+        }
+
+        const userSvc = this.#injector.get(UserService)
 
         localStorage.setItem('access_token', auth.access_token)
 
