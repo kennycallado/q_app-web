@@ -1,12 +1,22 @@
-export enum PubQuestionType {
-  Checkbox = "checkbox",
-  Input = "input",
-  Radio = "radio",
-  Range = "range",
+export class Question {
+  id: number;
+  question_type: QuestionType;
+  content: string;
 }
 
-export class PubQuestion {
-  id: number;
-  question_type: PubQuestionType;
+export class NewQuestion {
+  question_type: QuestionType;
+  content: NewQuestionContent
+}
+
+export class NewQuestionContent {
+  locale: string;
   question: string;
+}
+
+export enum QuestionType {
+  Checkbox = 'checkbox',
+  Input = 'input',
+  Radio = 'radio',
+  Range = 'range',
 }

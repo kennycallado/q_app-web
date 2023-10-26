@@ -1,9 +1,9 @@
-import { PubQuestion } from "./question";
+import { Question } from "./question";
 import { PubSlide } from "./slide";
 
 export type PubContentType = {
   slides?: PubSlide[];
-  form?: PubQuestion[] | [PubQuestion[]];
+  form?: Question[] | [Question[]];
   external?: number;
 }
 

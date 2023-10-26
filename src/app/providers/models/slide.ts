@@ -1,5 +1,5 @@
 import { Media } from "./media";
-import { PubQuestion } from "./question";
+import { Question } from "./question";
 
 export enum PubSlideType {
   Content = "content",
@@ -13,5 +13,5 @@ export class PubSlide {
   description: string;
   media?: Media;
   content?: string;
-  question?: PubQuestion;
+  question?: Question;
 }

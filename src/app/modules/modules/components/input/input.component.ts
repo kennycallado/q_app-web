@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PubAnswer } from 'src/app/providers/models/answer';
-import { PubQuestion } from 'src/app/providers/models/question';
+import { Question } from 'src/app/providers/models/question';
 
 @Component({
   selector: 'app-input',
@@ -13,7 +13,7 @@ import { PubQuestion } from 'src/app/providers/models/question';
 export class InputComponent {
 
   @Input() answer?: PubAnswer
-  @Input() question: PubQuestion
+  @Input() question: Question
 
   @Output() changeAnswer = new EventEmitter<PubAnswer>();
 
