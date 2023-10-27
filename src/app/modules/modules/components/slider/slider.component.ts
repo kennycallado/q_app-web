@@ -58,7 +58,8 @@ export class SliderComponent implements OnInit, AfterViewInit{
   checkCompleted() {
     if (this.paper().resource.resource_type === 'module') return true
     else if (this.paper().resource.resource_type === 'slides') {
-      let n_questions: number = 0;
+      let n_questions: number = 0
+
       for (const slide of this.paper().resource.content.slides) {
         if (slide.slide_type === 'input') n_questions += 1
       }
@@ -80,11 +81,13 @@ export class SliderComponent implements OnInit, AfterViewInit{
     }, 2000)
 
     this.#router.navigate(['module'])
+    return ;
   }
 
   reachEnd() {
     if (!this.paper) return ;
     if (this.checkCompleted()) this.completed = true
+
     this.reachedEnd = true;
   }
 
