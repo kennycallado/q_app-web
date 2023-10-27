@@ -26,4 +26,8 @@ export class HomeComponent {
   removeMessage(id: number) {
     this.#messageSvc.remove(id)
   }
+
+  ngAfterViewInit() {
+    this.#messageSvc.initMessages()
+  }
 }
