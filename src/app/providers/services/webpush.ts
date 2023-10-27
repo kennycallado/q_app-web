@@ -20,12 +20,8 @@ export class PushService {
   #userSvc        = inject(UserService)
   #destrSvc       = inject(DestructorService)
 
-  #message_url    = isDevMode() ? "http://localhost:8005/api/v1/messaging/" : MESSAGE_URL
+  #message_url    = !isDevMode() ? MESSAGE_URL : "http://localhost:8005/api/v1/messaging/"
   // #message_url    = "http://localhost:8005/api/v1/messaging/"
-
-  // Repensar todo esto
-  // la idea: solo ejecutar subscribe() cuando el usuario
-  // se logea o cuando recibe un mensaje requiriendolo
 
   #innited = false
   update = effect(() => {
@@ -60,19 +56,7 @@ export class PushService {
         this.#messageSvc.add(new Message().new({ ...message.notification }))
         // other stuff
       }
-
-      // let new_message = new Message().new({
-      //   title: message.notification.title,
-      //   body: message.notification.body,
-      //   data: {
-      //     type: message.notification.data.type,
-      //     content: message.notification.data.content
-      //   }
-      // })
-
-      // this.#messageSvc.add(new_message)
     })
-
   }
 
   private destructor() {
