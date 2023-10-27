@@ -25,7 +25,7 @@ export class MessageService {
         data: { type: 'info', content: ['Welcome to Q App'] }
       })
 
-      this.add(firstMessage)
+      this.#messages.set([firstMessage])
     }
   }
 
