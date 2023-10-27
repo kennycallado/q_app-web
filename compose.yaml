@@ -9,12 +9,14 @@ version: "3.1"
 # 10s/entity/<...>/g
 # 12,$s/base:base@database\/base/entity:entity@database\/entity/g
 
+networks:
+  default:
+
 services:
   database:
     image: postgres:13-alpine
+    networks: ["default"]
     ports:
-      - "5432:5432"
-    expose:
       - "5432:5432"
     environment:
       POSTGRES_DB: base
@@ -23,24 +25,24 @@ services:
     command: [ "docker-entrypoint.sh", "-c", "wal_level=logical", "-c", "max_connections=300" ]
 
 # {{{
-  web:
-    image: kennycallado/q-app-web:latest
-    ports:
-      - 8000:80
+  # web:
+  #   image: kennycallado/q-app-web:latest
+  #   ports:
+  #     - 8000:80
 
-  admin:
-    image: kennycallado/q-app-admin:latest
-    ports:
-      - 8080:80
+  # admin:
+  #   image: kennycallado/q-app-admin:latest
+  #   ports:
+  #     - 8080:80
 # }}}
 
 # {{{ messages
   messages_api:
     image: kennycallado/q-api-messages:latest
+    networks: ["default"]
     ports:
       - "8005:8000"
-    expose:
-      - "8005:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -67,10 +69,10 @@ services:
   # {{{ profiles
   profiles_api:
     image: kennycallado/q-api-profiles:latest
+    networks: ["default"]
     ports:
       - "8001:8000"
-    expose:
-      - "8001:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -96,10 +98,10 @@ services:
   # {{{ users
   users_api:
     image: kennycallado/q-api-users:latest
+    networks: ["default"]
     ports:
       - "8002:8000"
-    expose:
-      - "8002:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -125,13 +127,14 @@ services:
   # {{{ auth
   auth_api:
     image: kennycallado/q-api-auth:latest
+    networks: ["default"]
     # extra_hosts:
     #   - "host.docker.internal:host-gateway"
     ports:
       - "8003:8000"
-    expose:
-      - "8003:8000"
+
     environment:
+      - ROCKET_ORIGIN_URL="http://localhost:8000,http://localhost:8080"
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
       - ROCKET_SECRET_KEY=""
@@ -145,11 +148,11 @@ services:
 # {{{ questions - answers
   # {{{ questions
   questions_api:
-    image: kennycallado/q-api-questions:latest
+    image: kennycallado/q-api-questions:0.1.5
+    networks: ["default"]
     ports:
       - "8011:8000"
-    expose:
-      - "8011:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -175,10 +178,10 @@ services:
   # {{{ answers
   answers_api:
     image: kennycallado/q-api-answers:latest
+    networks: ["default"]
     ports:
       - "8012:8000"
-    expose:
-      - "8012:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -206,10 +209,10 @@ services:
   # {{{ slides
   slides_api:
     image: kennycallado/q-api-slides:latest
+    networks: ["default"]
     ports:
       - "8021:8000"
-    expose:
-      - "8021:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -237,10 +240,10 @@ services:
   # {{{ resources
   resources_api:
     image: kennycallado/q-api-resources:latest
+    networks: ["default"]
     ports:
       - "8031:8000"
-    expose:
-      - "8031:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -266,10 +269,10 @@ services:
   # {{{ papers
   papers_api:
     image: kennycallado/q-api-papers:latest
+    networks: ["default"]
     ports:
       - "8032:8000"
-    expose:
-      - "8032:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -297,10 +300,10 @@ services:
   # {{{ checker
   checker_api:
     image: kennycallado/q-api-checker:latest
+    networks: ["default"]
     ports:
       - "3000:3000"
-    expose:
-      - "3000:3000"
+
     volumes:
       - scripts:/app/SCRIPTS
   # }}}
@@ -308,10 +311,10 @@ services:
   # {{{ logics and logics-cron
   logics_api:
     image: kennycallado/q-api-logics:latest
+    networks: ["default"]
     ports:
       - "8041:8000"
-    expose:
-      - "8041:8000"
+
     volumes:
       - scripts:/root/SCRIPTS
     environment:
@@ -339,6 +342,7 @@ services:
 
   logics-cron_api:
     image: kennycallado/q-api-logics:latest
+    networks: ["default"]
     volumes:
       - scripts:/root/SCRIPTS
     environment:
@@ -370,10 +374,10 @@ services:
   # {{{ projects
   projects_api:
     image: kennycallado/q-api-projects:latest
+    networks: ["default"]
     ports:
       - "8051:8000"
-    expose:
-      - "8051:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -399,10 +403,10 @@ services:
   # {{{ cron
   cron_api:
     image: kennycallado/q-api-cron:latest
+    networks: ["default"]
     ports:
       - "8052:8000"
-    expose:
-      - "8052:8000"
+
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
