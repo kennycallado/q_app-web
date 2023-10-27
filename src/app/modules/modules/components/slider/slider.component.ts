@@ -72,8 +72,12 @@ export class SliderComponent implements OnInit, AfterViewInit{
   submitAndExit() {
     if (!this.checkCompleted()) return ;
 
-    this.#paperSvc.postPaper(this.paper());
-    this.reachedEnd = false;
+    this.#paperSvc.postPaper(this.paper())
+    this.reachedEnd = false
+
+    setTimeout(() => {
+      this.#paperSvc.initPapers()
+    }, 2000)
 
     this.#router.navigate(['module'])
   }
