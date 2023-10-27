@@ -1,7 +1,7 @@
 export class Question {
   id: number;
   question_type: QuestionType;
-  content: string;
+  question: string;
 }
 
 export class NewQuestion {
