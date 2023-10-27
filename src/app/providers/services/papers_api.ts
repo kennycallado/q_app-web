@@ -23,18 +23,14 @@ export class PaperService {
   #paper_url  = isDevMode() ? "http://localhost:8032/api/v1/paper/" : PAPER_URL ;
   // #paper_url  = "http://localhost:8032/api/v1/paper/"
 
-  #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [])
+  #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [] as PubPaper[])
   papers  = computed(() => this.#papers())
-  update = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
-
-  // initialized = false
-  // init   = effect(() => { if (!this.initialized()) this.initPapers() }, { allowSignalWrites: true })
+  update  = effect(() => { this.#storageSvc.set('papers', this.#papers()) })
 
   constructor() { this.#destrSvc.add(() => this.destructor()) }
 
   initPapers() {
-    // this.initialized = true
-    this.#userSvc.me() // keeps the user updated. Should be better way
+    this.#userSvc.me()
 
     this.getApiPapers().subscribe((papers) => {
       for (let paper of papers) {
