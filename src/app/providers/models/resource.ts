@@ -3,7 +3,8 @@ import { PubSlide } from "./slide";
 
 export type PubContentType = {
   slides?: PubSlide[];
-  form?: Question[] | [Question[]];
+  // form?: Question[] | [Question[]];
+  form: any;
   external?: number;
 }
 

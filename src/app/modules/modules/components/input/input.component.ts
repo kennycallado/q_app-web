@@ -62,6 +62,7 @@ export class InputComponent {
   }
 
   ngOnInit(): void {
+    console.log(this.question)
     if (!this.answer) { this.answer = new PubAnswer() }
 
     this.spell(this.answer.answer)
