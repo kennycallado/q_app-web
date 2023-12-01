@@ -1,5 +1,9 @@
 # QAppWeb
 
+## NOTES:
+- change the server url in the services in order to deploy in production
+  - `src/app/providers/services/{auth, papers_api, user, webpush}`
+
 Run localy compiled version
 
 ``` bash

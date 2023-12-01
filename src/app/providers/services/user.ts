@@ -18,8 +18,8 @@ export class UserService {
   #authSvc    = inject(AuthService)
   #http       = inject(HttpClient)
 
-  #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
-  // #user_url   = "http://localhost:8002/api/v1/user/"
+  // #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
+  #user_url   = "http://localhost:8002/api/v1/user/"
 
   #user       = signal<PubUser>(this.#storageSvc.get('user') as PubUser || new PubUser)
   user        = computed(() => this.#user())

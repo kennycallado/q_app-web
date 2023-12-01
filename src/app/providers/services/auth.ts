@@ -23,9 +23,13 @@ export class AuthService {
   #injector   = inject(Injector)
   #http       = inject(HttpClient)
 
-  #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
-  // #auth_url   = "http://localhost:8003/auth/"
-  #admin_url  = isDevMode() ? "http://localhost:8080/" : BASE_URL.replace('https://', 'https://admin.')
+  // #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
+  // #admin_url  = isDevMode() ? "http://localhost:8080/" : BASE_URL.replace('https://', 'https://admin.')
+
+  // ensure that the app runs in dev mode
+  // should be changed for production
+  #admin_url  = "http://localhost:8080/"
+  #auth_url   = "http://localhost:8003/auth/"
 
   update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
   #access_token = signal<string>(localStorage.getItem('access_token') || '')

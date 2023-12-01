@@ -20,8 +20,8 @@ export class PushService {
   #userSvc        = inject(UserService)
   #destrSvc       = inject(DestructorService)
 
-  #message_url    = !isDevMode() ? MESSAGE_URL : "http://localhost:8005/api/v1/messaging/"
-  // #message_url    = "http://localhost:8005/api/v1/messaging/"
+  // #message_url    = !isDevMode() ? MESSAGE_URL : "http://localhost:8005/api/v1/messaging/"
+  #message_url    = "http://localhost:8005/api/v1/messaging/"
 
   #innited = false
   update = effect(() => {
