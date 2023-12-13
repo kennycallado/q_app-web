@@ -30,39 +30,47 @@ for platform in ${platforms[@]}; do
 
   tag=$(echo "${platform//\//_}" | tr -d 'linux_' | xargs -I {} echo {})
 
-  docker buildx build --no-cache --pull \
+  podman build --no-cache --pull \
     --platform $platform \
     -t kennycallado/$package_name:${package_version}-${tag} \
     -f ./Containerfile .
-done
 
-# Push the docker images
-echo "Pushing the docker images..."
-docker push -a kennycallado/${package_name}
+  # Push the docker images
+  echo "Pushing the image..."
+  podman push kennycallado/$package_name:${package_version}-${tag}
+done
 
 # Create the manifest
 echo "Creating the manifest for the version: $package_version"
-docker manifest create kennycallado/${package_name}:${package_version} \
-  kennycallado/${package_name}:${package_version}-amd64 \
-  kennycallado/${package_name}:${package_version}-arm64
+podman manifest create kennycallado/${package_name}:${package_version}
 
-# manifest for latest version
-echo "Creating the manifest for latest version..."
-docker manifest create kennycallado/${package_name}:latest \
-  --amend kennycallado/${package_name}:${package_version}-amd64 \
-  --amend kennycallado/${package_name}:${package_version}-arm64
+echo "Adding the images to the manifest..."
+for platform in ${platforms[@]}; do
+  tag=$(echo "${platform//\//_}" | tr -d 'linux_' | xargs -I {} echo {})
+  podman manifest add --arch ${platform#*/} kennycallado/${package_name}:${package_version} kennycallado/${package_name}:${package_version}-${tag}
+done
 
+echo "Creating the latest manifest..."
+podman manifest create kennycallado/${package_name}:latest
+
+echo "Adding the images to the manifest..."
+for platform in ${platforms[@]}; do
+  tag=$(echo "${platform//\//_}" | tr -d 'linux_' | xargs -I {} echo {})
+  podman manifest add --arch ${platform#*/} kennycallado/${package_name}:latest kennycallado/${package_name}:${package_version}-${tag}
+done
 
 # push the manifests
 echo "Pushing the manifests..."
-docker manifest push --purge kennycallado/${package_name}:${package_version}
-docker manifest push --purge kennycallado/${package_name}:latest
+podman manifest push --rm kennycallado/${package_name}:${package_version} docker://kennycallado/${package_name}:${package_version}
+podman manifest push --rm kennycallado/${package_name}:latest docker://kennycallado/${package_name}:latest
 
 # remove the images
 echo "Removing the images..."
-docker rmi kennycallado/${package_name}:${package_version}-amd64
-docker rmi kennycallado/${package_name}:${package_version}-arm64
+podman rmi kennycallado/${package_name}:${package_version}-amd64
+podman rmi kennycallado/${package_name}:${package_version}-arm64
 
 # remove the manifest
 echo "Cleaning up the manifest..."
-docker system prune -f
+podman system prune -f
+
+exit 0
