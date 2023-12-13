@@ -1,5 +1,6 @@
-import { Injectable, computed, effect, inject, isDevMode, signal } from "@angular/core";
+import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { DOCUMENT } from '@angular/common';
 
 import { PAPER_URL } from "../constants";
 import { PubPaper, PubPaperPush } from "../models/paper"
@@ -19,9 +20,9 @@ export class PaperService {
   #authSvc    = inject(AuthService)
   #userSvc    = inject(UserService)
   #http       = inject(HttpClient)
+  #document   = inject(DOCUMENT)
 
-  // #paper_url  = isDevMode() ? "http://localhost:8032/api/v1/paper/" : PAPER_URL ;
-  #paper_url  = "http://localhost:8032/api/v1/paper/"
+  #paper_url  = this.#document.location.hostname === 'localhost' ? "http://localhost:8032/api/v1/paper/" : PAPER_URL
 
   #papers = signal<PubPaper[]>(this.#storageSvc.get('papers') as PubPaper[] || [] as PubPaper[])
   papers  = computed(() => this.#papers())

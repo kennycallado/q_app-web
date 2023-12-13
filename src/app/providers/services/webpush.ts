@@ -1,5 +1,6 @@
+import { Injectable, effect, inject } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
-import { Injectable, effect, inject, isDevMode } from "@angular/core"
+import { DOCUMENT } from '@angular/common';
 import { SwPush } from "@angular/service-worker"
 
 import { MESSAGE_URL, VAPID_PUBLIC_KEY } from "../constants"
@@ -19,9 +20,9 @@ export class PushService {
   #authSvc        = inject(AuthService)
   #userSvc        = inject(UserService)
   #destrSvc       = inject(DestructorService)
+  #document       = inject(DOCUMENT)
 
-  // #message_url    = !isDevMode() ? MESSAGE_URL : "http://localhost:8005/api/v1/messaging/"
-  #message_url    = "http://localhost:8005/api/v1/messaging/"
+  #message_url    = this.#document.location.hostname === 'localhost' ? "http://localhost:8004/message/" : MESSAGE_URL
 
   #innited = false
   update = effect(() => {

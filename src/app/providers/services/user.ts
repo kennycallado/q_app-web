@@ -1,5 +1,6 @@
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, effect, inject, isDevMode, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { USER_URL } from '../constants';
@@ -17,9 +18,9 @@ export class UserService {
   #destrSvc   = inject(DestructorService)
   #authSvc    = inject(AuthService)
   #http       = inject(HttpClient)
+  #document   = inject(DOCUMENT)
 
-  // #user_url   = isDevMode() ? "http://localhost:8002/api/v1/user/" : USER_URL
-  #user_url   = "http://localhost:8002/api/v1/user/"
+  #user_url   = this.#document.location.hostname === 'localhost' ? "http://localhost:8002/api/v1/user/" : USER_URL
 
   #user       = signal<PubUser>(this.#storageSvc.get('user') as PubUser || new PubUser)
   user        = computed(() => this.#user())

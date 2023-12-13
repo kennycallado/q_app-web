@@ -1,5 +1,6 @@
+import { Injectable, Injector, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, effect, inject, isDevMode, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
@@ -22,14 +23,10 @@ export class AuthService {
   #destrSvc   = inject(DestructorService)
   #injector   = inject(Injector)
   #http       = inject(HttpClient)
+  #document   = inject(DOCUMENT)
 
-  // #auth_url   = isDevMode() ? "http://localhost:8003/auth/" : AUTH_URL
-  // #admin_url  = isDevMode() ? "http://localhost:8080/" : BASE_URL.replace('https://', 'https://admin.')
-
-  // ensure that the app runs in dev mode
-  // should be changed for production
-  #admin_url  = "http://localhost:8080/"
-  #auth_url   = "http://localhost:8003/auth/"
+  #auth_url  = this.#document.location.hostname === 'localhost' ? "http://localhost:8003/auth/" : AUTH_URL
+  #admin_url = this.#document.location.hostname === 'localhost' ? "http://localhost:8080/" : BASE_URL.replace('https://', 'https://admin.')
 
   update = effect(() => { localStorage.setItem('access_token', this.#access_token()) })
   #access_token = signal<string>(localStorage.getItem('access_token') || '')
